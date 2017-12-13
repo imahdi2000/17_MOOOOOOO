@@ -2,11 +2,8 @@ var box = document.getElementById("box");
 var boxHeight = box.offsetHeight;
 var boxWidth = box.offsetWidth;
 
-//hardcode target as center
-//randomize later
-var targetX = boxWidth / 2;
-var targetY = boxHeight / 2;
-
+var targetX = Math.random() * boxWidth;
+var targetY = Math.random() * boxHeight;
 
 console.log( "box height: " + boxHeight );
 console.log( "box width: " + boxWidth );
@@ -16,16 +13,18 @@ var distance = function (x0, y0, x1, y1) {
     return ((x1-x0)**2+(y1-y0)**2)**.5;
 };
 
+var dist = 0, maxDist = 0, percentage = 0;
 
 var findIt = function(e) {
-  var dist = distance(e.x, e.y, targetX, targetY);
-  var maxDist = distance(0, 0, boxWidth, boxHeight);
-  var color = 255 - (255 * (dist/maxDist));
-  box.setAttribute("style", "background-color: rgb(" + color + "," + color + "," + color + ")");
+  dist = distance(e.x, e.y, targetX, targetY);
+  maxDist = distance(0, 0, boxWidth, boxHeight) / 2;
+  percentage = dist/maxDist;
+  percentage > .05 ? box.setAttribute("style", "background-color: rgba(0,0,125," + percentage +  ")") : box.setAttribute("style", "cursor: pointer; background-color: rgba(0,0,125," + percentage +  ")");
 };
 
-/*
-your OTHER FXNS
-*/
+var foundIt = function(e) {
+  if (percentage < .05) alert("You found the cow!");
+};
 
 box.addEventListener("mousemove", findIt);
+box.addEventListener("click", foundIt);
