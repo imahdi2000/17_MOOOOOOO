@@ -1,19 +1,19 @@
 var box = document.getElementById("box");
 var boxHeight = box.offsetHeight;
 var boxWidth = box.offsetWidth;
+var scoreTag = document.getElementById("score");
+var targetX, score = 0, targetY, dist = 0, maxDist = 0, percentage = 0, threshold = 0.03;
 
-var targetX = Math.random() * boxWidth;
-var targetY = Math.random() * boxHeight;
-
-console.log( "box height: " + boxHeight );
-console.log( "box width: " + boxWidth );
+var newTarget = function(e) {
+  targetX = Math.random() * boxWidth;
+  targetY = Math.random() * boxHeight;
+}
+newTarget();
 
 //calculate distance between current mouse pos and target
 var distance = function (x0, y0, x1, y1) {
-    return ((x1-x0)**2+(y1-y0)**2)**.5;
+  return ((x1-x0)**2+(y1-y0)**2)**.5;
 };
-
-var dist = 0, maxDist = 0, percentage = 0, threshold = 0.03;
 
 var findIt = function(e) {
   dist = distance(e.x, e.y, targetX, targetY);
@@ -23,7 +23,11 @@ var findIt = function(e) {
 };
 
 var foundIt = function(e) {
-  if (percentage < threshold) alert("You found the cow!");
+  if (percentage < threshold)
+    if (confirm("You found the cow!\n\nWould you like to play again?")) {
+      scoreTag.innerHTML = ++score;
+      newTarget();
+    }
 };
 
 box.addEventListener("mousemove", findIt);
